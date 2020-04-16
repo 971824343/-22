@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>计划安排</title>
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/index.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="header">计划安排</header>
+      <div class="content">
+        <span
+          class="icon-down el-icon-arrow-down"
+          v-show="myLists.length>0"
+          @click="selectAllrenws"
+        >
+        </span>
+        <input
+          type="text"
+          class="my-add"
+          placeholder="添加今天的任务"
+          @keyup.enter="addrenw($event.target)"
+          ref="currentInput"
+        />
+        <ul class="content_myLists">
+          <li
+            v-for="(list,index) in myLists"
+            class="content_my_List"
+            @mouseover="list.isActive = true"
+            @mouseleave="list.isActive=false"
+            v-show="defaultShow || (whichShow?list.isChecked:!list.isChecked)"
+          >
+            <input type="checkbox" class="checkBox" v-model="list.isChecked" />
+            <div
+              class="content_my_List_main"
+              @dblclick="toEdit(list)"
+              v-show="!list.isEditing"
+              :class="{deleted:list.isChecked}"
+            >
+              {{list.value}}
+            </div>
+            <input
+              type="text"
+              class="content_my_List_main main_input"
+              v-model="list.value"
+              v-show="list.isEditing"
+              v-renw-focus="list.value"
+              @blur="unEdit(list)"
+            />
+            <span
+              class="el-icon-close content_my_List_delete"
+              :class="{show: list.isActive}"
+              @click="deleterenw(index)"
+            ></span>
+          </li>
+        </ul>
+        <div class="data" v-show="myLists.length>0">
+          <div class="data_times" v-show="times === 0">
+            <span>剩余任务 {{times}}</span>
+          </div>
+          <div class="data_times" v-show="times > 0">
+            <span>剩余任务 {{times}}</span>
+          </div>
+          <div class="data_status">
+            <a
+              href="#"
+              :class="{active:index === dataStatusIndex}"
+              v-for="(item,index) in dataStatus"
+              @click="switchStatus(index)"
+              :key="index"
+            >
+              {{item}}
+            </a>
+          </div>
+          <div
+            class="data_clearRw"
+            @click="clearRw"
+            v-show="times < myLists.length"
+          >
+            <a href="#"> 清除任务 </a>
+          </div>
+          <div
+            class="data_clearRw"
+            @click="clearRw"
+            v-show="times === myLists.length"
+          >
+            <a href="#"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../node_modules/vue/dist/vue.js"></script>
+    <script src="./js/app.js"></script>
+  </body>
+</html>
